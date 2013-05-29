@@ -1,3 +1,21 @@
+NOTE: THIS IS A WORK IN PROGRESS
+
+If you are looking for integration with Kafka 0.8.0 and Storm 0.9.0 this is a partial working Spout. Somethings that need
+work:
+1. the emitter doesn't know about the maximum number of tuples Storm expects per call. Need to detect that and
+   only emit what Storm can handle. This might lead to messages being lost.
+2. The start from beginning logic might have an issue with finding the offset. Should be calling Kafka to find the offset
+   instead of using 0 or -1.
+3. The keys in ZK are wrong. In 0.8.0 Kafka can now move the leader between brokers, so the key that used to be the broker name
+   and topic/partition isn't valid if the leader changes. Should rename the key to be the topic and parition then use
+   the Kafka APIs to find the real leader on startup/leader change
+4. It has only been tested with Trident topologies. Not sure if it works with 'regular' Storm.
+5. 
+
+
+ORIGINAL file starts here:
+
+
 storm-kafka provides a regular spout implementation and a TransactionalSpout implementation for Apache Kafka 0.7.
 
 storm-kafka is available from Maven [here](http://clojars.org/storm/storm-kafka).
